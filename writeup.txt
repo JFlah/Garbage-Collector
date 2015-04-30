@@ -1,0 +1,32 @@
+Jack Flaherty writeup:
+
+ALL TESTS WORK
+
+For the myfree() Fcn, it was as simple as calling the unallocate function on whatever block of memory the pointer is pointing at. Once it is unallocated, it is freed.
+
+myalloc() Fcn:
+
+creates a void pointer using myalloc, then calls myalloc2 using that same size. myalloc2() just checks to make sure that there is further space to allocate, and if it sends NULL back to myalloc, myalloc will coalesce and try again.
+
+coalesce():
+
+i use a pointer that acts as a head at the start of the payload, and a nextptr which will point at the nextBlock. The if statement checks for conditions for coalescing (next block is not 0, current block and next block are unallocated) if they are not met, it simply sets the head to the next block and tries again, after setting the *(ptr-1) or pointer to beginning of control word to point at the beginning of nextBlock's control word.
+
+printallocation():
+
+very simple. shows the place in memory in hex where the block is allocated, shows the entire size of the block of memory including the control word, then prints the length without the control word, then it shows whether its marked and allocated with a 1 or 0 representing the respective bits in the control word.
+
+mygc uses the code provided and then uses the comment hit to call the mark and sweep functions.
+
+
+mark() checks to see if a block is allocated, if it is, then it marks the block if it needs to be marked. then it adjusts the size. while the +1 of our current increment variable i is less than this new size, mark is called recursively on itself for the next block.
+
+sweep() is simple. if something is allocated and not marked, it is freed. otherwise it is unmarked. then it moves to the next block.
+
+isPtr(int *p):
+
+we have a head variable pointing to the start of the payload, then if this head is <= the given pointer *p AND the given pointer is <= (the head variable+heaplength) then it is most definitely a pointer. if not, null is returned.
+
+the allocate and mark functions all use simple arithmetic to change bits.
+
+blockMarked(int *p) does not, using ~0x2 masks in a way that checks the pointer against 1...1101
